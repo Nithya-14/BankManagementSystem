@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js"></script>
+  
+</head>
+
+
+<body class="body">
+
+<h2>View Transactions</h2>
+<form  data-ng-app="myApp"  data-ng-controller="validateCtrl"
+name="myForm" data-novalidate method="post" action="ViewTransactionDetails" >
+<div>
+<p>Transaction Id:<br>
+
+  <input type="number" name="transId" data-ng-model="transId" data-ng-pattern="patTransId" data-ng-required="!accNum">
+  <span class="error" data-ng-show="myForm.transId.$dirty && myForm.transId.$invalid">Please enter your 10 digit Transaction Number 
+  </span>
+</p>
+
+<p>Account Number:<br>
+  <input type="number" name="accNum" data-ng-model="accNum" data-ng-pattern="patAccNum" data-ng-required="!transId" >
+  <span class="error" data-ng-show="myForm.accNum.$dirty && myForm.accNum.$invalid"> Please enter your 16 digit Account Number 
+  </span>
+</p>
+</div>
+<p>
+  <input type="submit"
+  data-ng-disabled="myForm.transId.$dirty && myForm.transId.$invalid ||
+  myForm.accNum.$dirty && myForm.accNum.$invalid">
+</p>
+
+</form>
+
+<script>
+var app = angular.module('myApp', []);
+app.controller('validateCtrl', function($scope) {  
+    $scope.patAccNum = '\\d{16}';
+    $scope.patTransId = '\\d{10}';
+    $scope.transId=1234567890;
+    $scope.accNum=1234567890123456;
+});
+</script>
+<a class="homeBtn" href="/BaseCodeSlice_MyAssessmentApplication">Home</a>
+</body>
+</html>

@@ -1,0 +1,73 @@
+package test.java;
+
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.TestContext;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.web.WebAppConfiguration;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.web.context.WebApplicationContext;
+
+import com.cognizant.service.PerformTransactionService;
+import com.cognizant.vo.TransactionVO;
+ 
+
+ 
+import static org.hamcrest.Matchers.*;
+import static org.hamcrest.Matchers.is;
+import static org.mockito.Mockito.*;
+//import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+//import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
+ 
+
+	 
+	import static org.hamcrest.Matchers.hasProperty;
+	
+	import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+//import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+	 
+	@RunWith(SpringJUnit4ClassRunner.class)
+	//@ContextConfiguration(classes = {TestContext.class, WebApplicationContext.class})
+	@ContextConfiguration(locations="file:WebContent/WEB-INF/BaseCodeSlice_MyAssessmentApplication-servlet.xml")
+	@WebAppConfiguration
+	public class PerformTransactionContollerTest {
+	 
+	    private MockMvc mockMvc;
+	  
+	    @Autowired
+	    private PerformTransactionService performTransactionService;
+	 
+	    @Autowired
+	    private WebApplicationContext webApplicationContext;
+
+	 
+	    //The setUp() method is omitted.
+	 
+	    @Test
+	    public void performTransactionTest() throws Exception {
+	    	TransactionVO transactionVO = new TransactionVO();
+	    	transactionVO.setAccountNumber(123450000L);
+	    	transactionVO.setDescription("Testing via Spring Test");  
+	    	transactionVO.setTransactionAmount(30000.00);
+	    	transactionVO.setTransactionType("Deposit");
+	               
+	        //when(performTransactionService.updateTransactionDetails(transactionVO)..thenReturn(transactionVO);
+	 
+	        mockMvc.perform(post("/initiateTransaction").requestAttr("TransactionDetails", transactionVO))
+	                .andExpect(status().isOk())
+	                .andExpect(view().name("initiateTransaction"))
+	                .andExpect(forwardedUrl("/WEB-INF/views/initiateTransaction.jsp"))
+	                .andExpect(model().attribute("TransactionDetails", hasProperty("accountNumber", is(123450000L))))
+	                .andExpect(model().attribute("TransactionDetails", hasProperty("transactionType", is("Deposit"))))
+	                .andExpect(model().attribute("TransactionDetails", hasProperty("transactionAmount", is(30000.00))))
+	        		.andExpect(model().attribute("TransactionDetails", hasProperty("description", is("Testing via Spring Test"))));
+	 
+	        verify(performTransactionService, times(1)).updateTransactionDetails(transactionVO);
+	        verifyNoMoreInteractions(performTransactionService);
+	    }
+	}

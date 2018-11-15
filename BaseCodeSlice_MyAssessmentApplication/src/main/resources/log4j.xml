@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE log4j:configuration SYSTEM 
+
+          "http://logging.apache.org/log4j/1.2/apidocs/org/apache/log4j/xml/doc-files/log4j.dtd">
+
+<log4j:configuration xmlns:log4j="http://jakarta.apache.org/log4j/">
+
+
+    <appender name="Appender1" class="org.apache.log4j.ConsoleAppender">
+
+        <layout class="org.apache.log4j.PatternLayout">
+
+            <param name="ConversionPattern" value="%-7p %d [%t] %c %x - %m%n" />
+
+        </layout>
+
+    </appender>
+
+    <appender name="Appender2" class="org.apache.log4j.FileAppender">
+
+        <param name="File" value="c:/RDP/bank.log" />
+        <layout class="org.apache.log4j.PatternLayout">
+
+            <param name="ConversionPattern" value="%-7p %d [%t] %c %x - %m%n" />
+
+        </layout>
+        
+
+    </appender> 
+  <appender name="file" class="org.apache.log4j.RollingFileAppender">
+         <param name="append" value="false" />
+         <param name="maxFileSize" value="500KB" />
+         <param name="maxBackupIndex" value="5" />
+         <param name="file" value="../../logs/bank.log" />
+         <layout class="org.apache.log4j.PatternLayout">
+            <param name="ConversionPattern"
+                  value="%d{yyyy-MM-dd HH:mm:ss} %-5p %c{1}:%L - %m%n" />
+         </layout>
+      </appender>
+    <root>
+
+        <level value="INFO" />        
+	<appender-ref ref="Appender1" />
+        <appender-ref ref="Appender2" /> 
+         <!-- <appender-ref ref="file" />-->
+
+    </root>
+
+</log4j:configuration>
+
